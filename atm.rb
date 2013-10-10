@@ -62,12 +62,33 @@ freds_acct = Account.new
 freds_acct.owner = fred
 fred.account = freds_acct
 
-money = Money.new
-money.value = 300
-freds_acct.money = money
+joe = People.new
+joe.id = 'joe'
+joes_acct = Account.new
+joes_acct.owner = joe
+joe.account = joes_acct
 
-atm = ATM.new
-atm.add_user fred
-atm.deposit(200, fred)
+bank = Bank.new
 
-puts fred.account.money.value
+atm_one = ATM.new
+bank.add_atm(atm_one)
+atm_one.add_user(joe)
+
+atm_two = ATM.new
+bank.add_atm(atm_two)
+atm_two.add_user(fred)
+
+money_joe = Money.new
+money_joe.value = 250
+money_fred = Money.new
+money_fred.value = 1000
+
+atm_two.deposit(money_joe.value, atm_two.find_user('joe'))
+atm_one.deposit(money_fred.value, atm_one.find_user('fred'))
+
+atm_one.withdrawal(50, atm_two.find_user('fred'))
+atm_two.withdrawal(20, atm_one.find_user('joe'))
+bank.transfer(100, atm_one.find_user('fred'), atm_two.find_user('joe'))
+
+puts joe.account.money.value #$130
+puts fred.account.money.value #$1050
